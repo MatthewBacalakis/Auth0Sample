@@ -1,0 +1,9 @@
+.DS_Store
+node_modules
+db.lock
+packages/
+obj/
+bin/
+.vs/
+*pubxml.user
+*.pubxml

@@ -1,0 +1,14 @@
+﻿{
+  "dependencies": {
+    "Auth0.OidcClient.UWP": "2.0.0",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "6.1.4"
+  },
+  "frameworks": {
+    "uap10.0.10240": {}
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-x86": {},
+    "win10-x64": {}
+  }
+}
