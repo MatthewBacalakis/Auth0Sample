@@ -5,7 +5,7 @@
     TokenInterceptor.$inject = ["authService"];
         
     function TokenInterceptor(authService) {
-        //when token available adds an Authorization header to each output request
+        //when token available adds an Authorization header to each outbound request
         //with value: Bearer access_token
         var interceptor = { request: request };
 

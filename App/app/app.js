@@ -22,7 +22,7 @@
     $httpProvider
   ) {
 
-    //create the interceptor that will add token to outgoing requests.
+    //register the interceptor that will add token to outgoing requests.
     $httpProvider.interceptors.push('TokenInterceptor');
 
     $stateProvider
