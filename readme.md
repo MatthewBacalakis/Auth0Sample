@@ -54,7 +54,7 @@ In the Auth0 dashboard we will define three scopes indicating what operations th
 				break;
 		}
   
-		context.accessToken.scope = [scope, 'openid'];
+		context.accessToken.scope = [scope];
 		callback(null, user, context);
 	}
 	```
@@ -65,10 +65,7 @@ In the Auth0 dashboard we will define three scopes indicating what operations th
 	
 	```javascript
 	function (user, context, callback) {
-	  if (context.request.geoip) {
 		context.idToken['https://auth0sample/jobTitle'] = user.app_metadata.jobTitle;
-	  }
-
 	  callback(null, user, context);
 	}
 	```
@@ -165,11 +162,21 @@ Upon clicking one of the buttons a call is made to our mock api service.  An Ang
 Upon clicking any of the buttons you will receive a response indicating either the user had the appropriate scope for the corresponding endpoint, or they lacked authorization.
 
 ## Web API Service Setup and Walkthrough
-The mock WebApi service follows the [ASP.NET Web API (OWIN): Authorization](https://auth0.com/docs/quickstart/backend/webapi-owin/01-authorization) tutorial exactly.  That tutorial explains how the API is setup and how the [ScopeAuthorize] attribute is added to endpoints to authorize only users with the appropriate scope.  
+The mock WebApi service follows the [ASP.NET Web API (OWIN): Authorization](https://auth0.com/docs/quickstart/backend/webapi-owin/01-authorization) tutorial.  That tutorial explains how the API is setup and how the [ScopeAuthorize] attribute is added to endpoints to authorize only users with the appropriate scope.  The only addition to this sample is to enable support for CORS.  If your app and api are running under urls that differ in protocol, domain, or port you should set the CorsOrigin key in the web.config file to the url your app is running under as below.
+
+```xml
+<appSettings>
+	...
+	...
+    <add key="CorsOrigin" value="http://localhost:3000"/>
+</appSettings>
+```
 
 
  
 # Refresh Token
+
+
 
 
 
