@@ -49,8 +49,6 @@ namespace UWPSample
             if (!string.IsNullOrEmpty(audienceTextBox.Text))
                 extraParameters.Add("audience", audienceTextBox.Text);
 
-            extraParameters.Add("scope", "openid offline_access");
-
             DisplayResult(await client.LoginAsync(extraParameters: extraParameters));
         }
 
@@ -97,6 +95,7 @@ namespace UWPSample
             {
                 Domain = domain,
                 ClientId = clientId,
+                Scope = "openid offline_access"
             });
             return client;
         }
