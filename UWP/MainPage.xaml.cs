@@ -18,9 +18,9 @@ namespace UWPSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public string AccessToken { get; set; }
+        private string AccessToken { get; set; }
         private static HttpClient httpClient = new HttpClient();
-        public const string itemsEndpoint = "https://auth0sampleapi.azurewebsites.net/api/items";
+        private const string itemsEndpoint = "https://auth0sampleapi.azurewebsites.net/api/items";
 
         readonly string[] _connectionNames = new string[]
         {
@@ -154,7 +154,6 @@ namespace UWPSample
             AccessToken = newToken.AccessToken;
 
             resultTextBox.Text += $"New access token received: {AccessToken}";
-
         }
     }
 }
