@@ -9,7 +9,7 @@ At a high level the flow during this sample is as follows:
 2. Auth0 returns an access_token that includes a scope.
 3. Client treats the user as a logged in user and can access the scope in the token for client side validation.
 4. Responding to user input the client calls a service endpoint and includes the access_token in the Authorization header.
-5. In addition to checking the token to authenticate the user, the service checks the scope on the token to see whether the user is authorized to use the particular endpoint being called.  
+5. The service checks the scope on the token to see whether the user is authorized to use the particular endpoint being called.  
 
 
 ## Dashboard Setup
@@ -40,7 +40,7 @@ In the Auth0 dashboard we will define three scopes indicating what operations th
 	```javascript
 	"jobTitle": "ItemDeleter"
 	```
-4.  Lastly we will create a rule to set the users scope in the access token returned upon a successful login.  
+4.  Next we will create a rule to set the users scope in the access token returned upon a successful login.  
 	1. In the Auth0 Dashboard go to the rules tab. Click CREATE RULE. 
 	2. Click empty rule.
 	3. Name your rule and insert this javascript into the rule.  The script reads the job title we created in step 3 from the app_metadata property of the user parameter.  Based on the title it then sets the scope property of the access token being returned. 
@@ -66,7 +66,7 @@ In the Auth0 dashboard we will define three scopes indicating what operations th
 		callback(null, user, context);
 	}
 	```
-5.  (Optional) The users's job title can be included in the id_token if you desire.  
+5.  Lastly the users's job title can be included in the id_token.  We will do so to use it for client side validation.  
 	1. In the Auth0 Dashboard go to the rules tab. Click create rule. 
 	2. Click empty rule.
 	3. Name your rule and insert this javascript into the rule.  The script retrieves the job title we created in step 3 from the app_metadata property. It is then added to a (namespaced) property calleld jobTitle.  
@@ -133,7 +133,7 @@ The getUserItemsScope function in the authService (app/auth/auth.service.js) dem
 ```javascript
 var tokenPayload = jwtHelper.decodeToken(localStorage.getItem('access_token'));
 ```
-In this sample application the scope is being read from the token and buttons corresponding to a scope the user does not possess disabled.  See the item buttons component controller and html for details. All buttons can be enabled by clicking the checkbox.
+In this sample application the user's job title is read from the id_token and only the button appropriate for the user's job title is enabled.  See the item buttons component controller and html for details. All buttons can be enabled by clicking the checkbox.
 
 Upon clicking one of the buttons a call is made to our mock api service.  An AngularJS interceptor is used to attach the token to any outgoing requests.
 #### app.js

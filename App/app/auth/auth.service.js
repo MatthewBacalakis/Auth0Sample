@@ -52,21 +52,14 @@
       return new Date().getTime() < expiresAt;
     }
 
-    function getUserItemsScope(){
+    function getUserJobTitle(){
       //retrieve :items scopes from the token scope property.
       if (!isAuthenticated()){
         return null;
       }
 
-      var tokenPayload = jwtHelper.decodeToken(localStorage.getItem('access_token'));
-      var scopes = tokenPayload.scope.split(" ");
-      for(var i = 0; i < scopes.length; i++){
-        if (scopes[i].indexOf(":items") > -1){
-          return scopes[i];
-        }
-      }
-      
-      return null;
+      var tokenPayload = jwtHelper.decodeToken(localStorage.getItem('id_token'));
+      return tokenPayload["https://auth0sample/jobTitle"];
     }
 
     return {
@@ -74,7 +67,7 @@
       handleAuthentication: handleAuthentication,
       logout: logout,
       isAuthenticated: isAuthenticated,
-      getUserItemsScope: getUserItemsScope
+      getUserJobTitle: getUserJobTitle
     }
   }
 })();

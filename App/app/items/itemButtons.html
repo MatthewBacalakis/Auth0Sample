@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-xs-2">
-        <button class="btn btn-primary" ng-disabled="vm.scope !== 'read:items' && !vm.enableAll" ng-click="vm.buttonClicked('GET')">Read</button>
+        <button class="btn btn-primary" ng-disabled="vm.jobTitle !== 'ItemReader' && !vm.enableAll" ng-click="vm.buttonClicked('GET')">Read</button>
     </div>
     <div class="col-xs-2">
-        <button class="btn btn-primary" ng-disabled="vm.scope !== 'write:items' && !vm.enableAll" ng-click="vm.buttonClicked('PUT')">Write</button>
+        <button class="btn btn-primary" ng-disabled="vm.jobTitle !== 'ItemWriter' && !vm.enableAll" ng-click="vm.buttonClicked('PUT')">Write</button>
     </div>
     <div class="col-xs-2">
-        <button class="btn btn-primary" ng-disabled="vm.scope !== 'delete:items' && !vm.enableAll" ng-click="vm.buttonClicked('DELETE')">Delete</button>
+        <button class="btn btn-primary" ng-disabled="vm.jobTitle !== 'ItemDeleter' && !vm.enableAll" ng-click="vm.buttonClicked('DELETE')">Delete</button>
     </div>
     <div class="col-xs-2">
         <input type="checkbox" ng-model="vm.enableAll">Enable All </input>

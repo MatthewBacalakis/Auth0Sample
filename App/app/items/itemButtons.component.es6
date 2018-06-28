@@ -10,7 +10,7 @@
     function ItemButtonsController(authService, a0sItemService){
         var vm = this;
         vm.buttonClicked = buttonClicked;
-        vm.scope = authService.getUserItemsScope();
+        vm.jobTitle = authService.getUserJobTitle();
 
         function buttonClicked(method){
             a0sItemService.CallItemService(method)
