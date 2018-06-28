@@ -96,7 +96,7 @@ The application in this sample is an AngularJS application setup similarly to th
       scope: 'openid'
     });
 ```
-2.  This example adds an app.constants.es6 file that includes a constant defining the url to our mock api service.  If you are running the api at a url other then the default it should be entered here.  
+2.  This example adds an app.constants.js file that includes a constant defining the url to our mock api service.  If you are running the api at a url other then the default it should be entered here.  
 3.  This sample is dependent on several packages (see index.html).  To download them run npm install from a command prompt in the App folder.
 	```
 	npm install
@@ -142,7 +142,7 @@ Upon clicking one of the buttons a call is made to our mock api service.  An Ang
     $httpProvider.interceptors.push('TokenInterceptor');
 ```
 
-#### tokenInterceptor.es6
+#### tokenInterceptor.js
 ```javascript
 (() => {        
     'use strict';
