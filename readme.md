@@ -14,25 +14,34 @@ At a high level the flow during this sample is as follows:
 
 ## Dashboard Setup
 
-In the Auth0 dashboard we will define three scopes indicating what operations the user is able to perform.  We will then configure a rule that includes this scope in the access_token so when it is passed to the Api this scope can be checked to determine whether the user has access to the endpoint. 
+In the Auth0 dashboard we will define three scopes indicating what operations the user is able to perform.  We will then configure a rule that includes this scope in the access_token so when it is passed to the Api it can be checked to determine whether the user has access to the endpoint. 
 
 1. The first step is to create our application.  
-    1. In the Auth0 Dashboard click the Add Application button.
+    1. In the Auth0 Dashboard click the CREATE APPLICATION button.
     2. Give your application a name and for this sample chose Single Page Application as the application type. Click create.
     3. Go the settings tab for the new application.  Save the domain and client id as they will be needed later.
 	4. Scroll down until you see the Allowed Callback URLs dialog and enter http://localhost:3000/callback. This url is the address Auth0 will return the access token to upon user login.  
 2. Next we create the api.  
-	1. In the Auth0 Dashboard go to the api tab and click the Create Api button.
+	1. In the Auth0 Dashboard go to APIs and click the CREATE API button.
 	2. Provide a name and identifier for the api, leave the signing algorithm to the default value, and click create.
 	3. Go to the settings tab for the new api.  Save the identifier as it will be needed later.
 	4. Go to the Scopes tab for the new api and add these scopes: read:items, write:items, and delete:items.  These will indicate what operation a user is able to perform on a mock items endpoint.  
 3. Next we will create three users and assign each a job title.  
 	1. In the Auth0 Dashboard go to the users tab.  If you do not have three users create them. Naming them a variation of reader, writer, and deleter would be helpful.  
-	2. Go to User Details for the reader user and scroll down to app_metadata.  Enter the following property in the app_metadata json "jobTitle": "ItemReader".  
-	3. Go to User Details for the writer user and scroll down to app_metadata.  Enter the following property in the app_metadata json "jobTitle": "ItemWriter".  
-	4. Go to User Details for the deleter user and scroll down to app_metadata.  Enter the following property in the app_metadata json "jobTitle": "ItemDeleter".  
+	2. Go to User Details for the reader user and scroll down to app_metadata.  Enter the following property in the app_metadata json 
+	```javascript
+	"jobTitle": "ItemReader"
+	```
+	3. Go to User Details for the writer user and scroll down to app_metadata.  Enter the following property in the app_metadata json.  
+	```javascript
+	"jobTitle": "ItemWriter"
+	```
+	4. Go to User Details for the deleter user and scroll down to app_metadata.  Enter the following property in the app_metadata json.
+	```javascript
+	"jobTitle": "ItemDeleter"
+	```
 4.  Lastly we will create a rule to set the users scope in the access token returned upon a successful login.  
-	1. In the Auth0 Dashboard go to the rules tab. Click create rule. 
+	1. In the Auth0 Dashboard go to the rules tab. Click CREATE RULE. 
 	2. Click empty rule.
 	3. Name your rule and insert this javascript into the rule.  The script reads the job title we created in step 3 from the app_metadata property of the user parameter.  Based on the title it then sets the scope property of the access token being returned. 
 	
@@ -65,7 +74,7 @@ In the Auth0 dashboard we will define three scopes indicating what operations th
 	```javascript
 	function (user, context, callback) {
 		context.idToken['https://auth0sample/jobTitle'] = user.app_metadata.jobTitle;
-	  callback(null, user, context);
+		callback(null, user, context);
 	}
 	```
 
@@ -87,7 +96,7 @@ The application in this sample is an AngularJS application setup similarly to th
       scope: 'openid'
     });
 ```
-2.  This example adds an app.constants.es6 file that includes a constant defining the url to our mock api service.  If you are running the api at a different url it should be entered here.  
+2.  This example adds an app.constants.es6 file that includes a constant defining the url to our mock api service.  If you are running the api at a url other then the default it should be entered here.  
 3.  This sample is dependent on several packages (see index.html).  To download them run npm install from a command prompt in the App folder.
 	```
 	npm install
@@ -96,11 +105,12 @@ The application in this sample is an AngularJS application setup similarly to th
 	```
 	node server
 	```
+5.  Browse to http://localhost:3000/
 
 	
 ## AngularJS Walkthrough
 
-Run the app and login with one of the users you created then check browser local storage for your token.  In chrome you can do this by opening developer tools with the F12 key and going to the Application tab. Find your application under local storage and you should see an entry for access_token.  To decode the token and view the contents you can go to https://jwt.io and paste the token into the encoded textbox.  You should see your scope in the decoded payload json like below
+Run the app and login with one of the users you created then check browser local storage for your token.  In chrome you can do this by opening developer tools with the F12 key and going to the Application tab. Find your application under local storage and you should see an entry for access_token.  To decode the token and view the contents you can browse to https://jwt.io and paste the token into the encoded textbox.  You should see your scope in the decoded payload json like below
 ```json
 {
   ...
@@ -123,7 +133,7 @@ The getUserItemsScope function in the authService (app/auth/auth.service.js) dem
 ```javascript
 var tokenPayload = jwtHelper.decodeToken(localStorage.getItem('access_token'));
 ```
-In this sample the scope is being read from the token and buttons corresponding to a scope the user does not possess disabled.  See the item buttons component controller and html for details. All buttons can be enabled by clicking the checkbox.
+In this sample application the scope is being read from the token and buttons corresponding to a scope the user does not possess disabled.  See the item buttons component controller and html for details. All buttons can be enabled by clicking the checkbox.
 
 Upon clicking one of the buttons a call is made to our mock api service.  An AngularJS interceptor is used to attach the token to any outgoing requests.
 #### app.js
@@ -173,7 +183,7 @@ The mock WebApi service follows the [ASP.NET Web API (OWIN): Authorization](http
 
  
 # Refresh Token
-For security reasons an access_token must have a relatively short expiration period.  In order to avoid forcing the user to login again when the token expires a [refresh_token](https://auth0.com/docs/tokens/refresh-token/current#revoke-a-refresh-token) can be returned along with the access token.  This refresh_token can be used to retrieve a new access_token but it must be kept secure.  As a Single Page Application cannot guarantee the security of a refresh_token a native UWP application will demonstrate the use of a refresh token.  While the SPA sample used the OAuth2 implicit flow, this native app uses the Authorization Code Flow.  Note that a native app cannot have access to the Application Client secret and therefore should implement [Proof Key for Code Exchange](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant-pkce) to prevent authorization code interception attacks.
+An access_token must have a relatively short expiration period.  In order to avoid forcing the user to login again when the token expires a [refresh_token](https://auth0.com/docs/tokens/refresh-token/current#revoke-a-refresh-token) can be returned along with the access token.  This refresh_token can be used to retrieve a new access_token but it must be kept secure.  As a Single Page Application cannot guarantee the security of a refresh_token a native UWP application will demonstrate the use of a refresh token.  While the SPA sample used the OAuth2 implicit flow, this native app uses the Authorization Code Flow.  Note that a native app cannot have access to the Application's client secret and therefore should implement [Proof Key for Code Exchange](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant-pkce) to prevent authorization code interception attacks.
 
 
 
@@ -182,21 +192,21 @@ For security reasons an access_token must have a relatively short expiration per
 For this sample we will need a new native application, rule, and an adjustment to our existing API.  
 
 1. To create our application :  
-    1. In the Auth0 Dashboard click the Add Application button.
+    1. In the Auth0 Dashboard click the CREATE APPLICATION button.
     2. Give your application a name and for this sample chose Native as the application type. Click create.
 	3. Go to the settings tab for the newly created application and save the domain and client id as they will be needed later.    
 	4. Retrieve the callback url for the native app.
 		1.  This sample follows the [Windows Universal App C#](https://auth0.com/docs/quickstart/native/windows-uwp-csharp) Quick Start.  Follow the Configure Callback URLs section of the Quick Start to retrieve the sample application's callback url.
 		2. Go to the settings tab of the application and enter the callback url in the Allowed Callback URLs section.  This url is the address Auth0 will return the access token to upon user login.  
 
-2.  Update the API to allow refresh tokens. For this sample we will reuse the API we created in the Scoped Authorization sample and allow refresh_tokens.  We are doing this for demo purposes for the UWP native app sample only.  Our SPA example can not keep a refresh_token secure and so a production SPA should never receive a refresh token.  
-	1.  In the Auth0 Dashboard go APIs and open the sample API we previously created.
+2.  Update the API to allow refresh tokens. For this sample we will reuse the API we created in the Scoped Authorization sample and allow refresh_tokens.  We are doing this for demo purposes for the UWP native app sample only.  Our SPA example can not keep a refresh_token secure and so a production SPA should never be allowed to receive a refresh token.  
+	1.  In the Auth0 Dashboard go to APIs and open the sample API we previously created.
 	2.  In the settings tab enable Allow Offline Access.
 	
 3.  Add a rule to ensure the offline_access and openid scopes are included in the access_token.
 	1. In the Auth0 Dashboard go to the rules tab. Click create rule. 
 	2. Click empty rule.
-	3. Name your rule and insert this javascript into the rule making sure to update the client id const with the client id of your application.  The script checks the clientId of the app the login attempt is for to see if it matches that of the native application.  If so it adds the offline_access and openid tokens to the access_token's scope.  
+	3. Name your rule and insert this javascript into the rule making sure to update the client id constant with the client id of your application.  The script checks the clientId of the app the login attempt is for to see if it matches that of the native application.  If so it adds the offline_access and openid scopes to the access_token's scope.  
 	
 	```javascript 
 	function (user, context, callback) {
@@ -215,7 +225,7 @@ This sample modifies the [Windows Universal App C# Quick Start](https://auth0.co
 
 At the beginning of the MainPage.xaml.cs class note the itemsEndpoint constant.  The url to the items endpoint in your sample  API should be entered there.
 ```csharp
-public const string itemsEndpoint = "https://sample.api/api/items";
+private const string itemsEndpoint = "https://sample.api/api/items";
 ```
 
 The GetAuth0Client function consolidates the code retrieving the Auth0 Client in a reusable function.  In this function the domain and clientId should be set to the domain and client id configured for the Application in the dashboard. This function will also set the scope to indicate we'd like a refresh_token and id_token.  
